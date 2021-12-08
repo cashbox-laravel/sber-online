@@ -1,19 +1,34 @@
 <?php
 
+/*
+ * This file is part of the "cashier-provider/sber-online" project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author Andrey Helldar <helldar@ai-rus.com>
+ *
+ * @copyright 2021 Andrey Helldar
+ *
+ * @license MIT
+ *
+ * @see https://github.com/cashier-provider/sber-online
+ */
+
 namespace Tests\Responses;
 
 use CashierProvider\Core\Http\Response as BaseResponse;
+use CashierProvider\Sber\Online\Responses\Status;
 use DragonCode\Contracts\Cashier\Http\Response;
 use Tests\TestCase;
-use CashierProvider\BankName\Technology\Responses\State;
 
-class StateTest extends TestCase
+class StatusTest extends TestCase
 {
     public function testInstance()
     {
         $response = $this->response();
 
-        $this->assertInstanceOf(State::class, $response);
+        $this->assertInstanceOf(Status::class, $response);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -42,14 +57,12 @@ class StateTest extends TestCase
 
     protected function response(): Response
     {
-        return State::make([
-            'TerminalKey' => $this->getTerminalKey(),
-
-            'OrderId'   => self::PAYMENT_ID,
-            'Success'   => true,
-            'Status'    => self::STATUS,
-            'PaymentId' => self::PAYMENT_EXTERNAL_ID,
-            'ErrorCode' => 0,
+        return Status::make([
+            'status' => [
+                'order_id'    => self::PAYMENT_EXTERNAL_ID,
+                'order_state' => self::STATUS,
+                'error'       => 0,
+            ],
         ]);
     }
 }

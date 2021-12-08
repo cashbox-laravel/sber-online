@@ -17,18 +17,17 @@
 
 namespace Tests\Responses;
 
-use CashierProvider\Core\Http\Response as BaseResponse;
-use CashierProvider\Sber\Online\Responses\Cancel as CancelResponse;
+use CashierProvider\Sber\Online\Responses\Online;
 use DragonCode\Contracts\Cashier\Http\Response;
 use Tests\TestCase;
 
-class RefundTest extends TestCase
+class OnlineTest extends TestCase
 {
     public function testInstance()
     {
         $response = $this->response();
 
-        $this->assertInstanceOf(CancelResponse::class, $response);
+        $this->assertInstanceOf(Online::class, $response);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -43,7 +42,14 @@ class RefundTest extends TestCase
     {
         $response = $this->response();
 
-        $this->assertSame('REVERSED', $response->getStatus());
+        $this->assertSame(self::STATUS, $response->getStatus());
+    }
+
+    public function testGetUrl()
+    {
+        $response = $this->response();
+
+        $this->assertSame(self::URL, $response->getUrl());
     }
 
     public function testToArray()
@@ -51,17 +57,22 @@ class RefundTest extends TestCase
         $response = $this->response();
 
         $this->assertSame([
-            BaseResponse::KEY_STATUS => 'REVERSED',
+            Online::KEY_STATUS => self::STATUS,
+            Online::KEY_URL    => self::URL,
         ], $response->toArray());
     }
 
+    /**
+     * @return \CashierProvider\Sber\Online\Responses\Online|\DragonCode\Contracts\Cashier\Http\Response
+     */
     protected function response(): Response
     {
-        return CancelResponse::make([
+        return Online::make([
             'status' => [
-                'order_id'     => self::PAYMENT_EXTERNAL_ID,
-                'order_status' => 'REVERSED',
-                'error_code'   => 0,
+                'order_id'       => self::PAYMENT_EXTERNAL_ID,
+                'order_state'    => self::STATUS,
+                'order_form_url' => self::URL,
+                'error'          => 0,
             ],
         ]);
     }

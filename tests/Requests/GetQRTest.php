@@ -19,35 +19,35 @@ namespace Tests\Requests;
 
 use CashierProvider\Core\Http\Request;
 use CashierProvider\Sber\Online\Constants\Body;
-use CashierProvider\Sber\Online\Requests\Cancel;
+use CashierProvider\Sber\Online\Requests\Create;
 use DragonCode\Contracts\Cashier\Http\Request as RequestContract;
 use DragonCode\Contracts\Http\Builder;
 use DragonCode\Support\Facades\Helpers\Arr;
 use Tests\TestCase;
 
-class CancelTest extends TestCase
+class GetQRTest extends TestCase
 {
     public function testInstance()
     {
-        $request = $this->request(Cancel::class);
+        $request = $this->request(Create::class);
 
-        $this->assertInstanceOf(Cancel::class, $request);
+        $this->assertInstanceOf(Create::class, $request);
         $this->assertInstanceOf(Request::class, $request);
         $this->assertInstanceOf(RequestContract::class, $request);
     }
 
     public function testUri()
     {
-        $request = $this->request(Cancel::class);
+        $request = $this->request(Create::class);
 
         $this->assertInstanceOf(Builder::class, $request->uri());
 
-        $this->assertSame('https://dev.api.sberbank.ru/ru/prod/order/v1/cancel', $request->uri()->toUrl());
+        $this->assertSame('https://dev.api.sberbank.ru/ru/prod/order/v1/creation', $request->uri()->toUrl());
     }
 
     public function testHeaders()
     {
-        $request = $this->request(Cancel::class);
+        $request = $this->request(Create::class);
 
         $headers = $request->headers();
 
@@ -67,7 +67,7 @@ class CancelTest extends TestCase
 
     public function testGetRawHeaders()
     {
-        $request = $this->request(Cancel::class);
+        $request = $this->request(Create::class);
 
         $this->assertIsArray($request->getRawHeaders());
 
@@ -79,7 +79,7 @@ class CancelTest extends TestCase
 
     public function testBody()
     {
-        $request = $this->request(Cancel::class);
+        $request = $this->request(Create::class);
 
         $body = $request->body();
 
@@ -87,14 +87,19 @@ class CancelTest extends TestCase
 
         $this->assertArrayHasKey(Body::REQUEST_ID, $body);
         $this->assertArrayHasKey(Body::REQUEST_TIME, $body);
-        $this->assertArrayHasKey(Body::EXTERNAL_ID, $body);
 
-        $this->assertSame(self::PAYMENT_EXTERNAL_ID, Arr::get($body, Body::EXTERNAL_ID));
+        $this->assertArrayHasKey(Body::MEMBER_ID, $body);
+        $this->assertArrayHasKey(Body::TERMINAL_ID, $body);
+
+        $this->assertArrayHasKey(Body::ORDER_ID, $body);
+        $this->assertArrayHasKey(Body::ORDER_SUM, $body);
+        $this->assertArrayHasKey(Body::ORDER_CURRENCY, $body);
+        $this->assertArrayHasKey(Body::ORDER_CREATED_AT, $body);
     }
 
     public function testGetRawBody()
     {
-        $request = $this->request(Cancel::class);
+        $request = $this->request(Create::class);
 
         $body = $request->getRawBody();
 
@@ -102,8 +107,13 @@ class CancelTest extends TestCase
 
         $this->assertArrayHasKey(Body::REQUEST_ID, $body);
         $this->assertArrayHasKey(Body::REQUEST_TIME, $body);
-        $this->assertArrayHasKey(Body::EXTERNAL_ID, $body);
 
-        $this->assertSame(self::PAYMENT_EXTERNAL_ID, Arr::get($body, Body::EXTERNAL_ID));
+        $this->assertArrayHasKey(Body::MEMBER_ID, $body);
+        $this->assertArrayHasKey(Body::TERMINAL_ID, $body);
+
+        $this->assertArrayHasKey(Body::ORDER_ID, $body);
+        $this->assertArrayHasKey(Body::ORDER_SUM, $body);
+        $this->assertArrayHasKey(Body::ORDER_CURRENCY, $body);
+        $this->assertArrayHasKey(Body::ORDER_CREATED_AT, $body);
     }
 }

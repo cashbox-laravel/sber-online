@@ -15,26 +15,17 @@
  * @see https://github.com/cashier-provider/sber-online
  */
 
-declare(strict_types=1);
-
 namespace CashierProvider\Sber\Online\Resources;
 
-use CashierProvider\Core\Resources\Details as BaseDetails;
+use CashierProvider\Core\Resources\Model as BaseModel;
 
-class Details extends BaseDetails
+abstract class Model extends BaseModel
 {
-    protected $url;
+    abstract public function getCertificatePath(): ?string;
 
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
+    abstract public function getCertificatePassword(): ?string;
 
-    public function toArray(): array
-    {
-        return [
-            'status' => $this->status,
-            'url'    => $this->url,
-        ];
-    }
+    abstract public function getMemberId(): string;
+
+    abstract public function getTerminalId(): string;
 }

@@ -1,34 +1,41 @@
 <?php
 
-namespace CashierProvider\BankName\Technology\Helpers;
+/*
+ * This file is part of the "cashier-provider/sber-online" project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author Andrey Helldar <helldar@ai-rus.com>
+ *
+ * @copyright 2021 Andrey Helldar
+ *
+ * @license MIT
+ *
+ * @see https://github.com/cashier-provider/sber-online
+ */
+
+namespace CashierProvider\Sber\Online\Helpers;
 
 use CashierProvider\Core\Services\Statuses as BaseStatus;
 
 class Statuses extends BaseStatus
 {
     public const NEW = [
-        'FORM_SHOWED',
-        'NEW',
+        'CREATED',
     ];
 
-    public const REFUNDING = [
-        'REFUNDING',
-    ];
+    public const REFUNDING = [];
 
     public const REFUNDED = [
-        'PARTIAL_REFUNDED',
-        'REFUNDED',
         'REVERSED',
+        'REFUNDED',
+        'REVOKED',
     ];
 
-    public const FAILED = [
-        'ATTEMPTS_EXPIRED',
-        'CANCELED',
-        'DEADLINE_EXPIRED',
-        'REJECTED',
-    ];
+    public const FAILED = [];
 
     public const SUCCESS = [
-        'CONFIRMED',
+        'PAID',
     ];
 }

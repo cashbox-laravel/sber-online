@@ -1,15 +1,30 @@
 <?php
 
+/*
+ * This file is part of the "cashier-provider/sber-online" project.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @author Andrey Helldar <helldar@ai-rus.com>
+ *
+ * @copyright 2021 Andrey Helldar
+ *
+ * @license MIT
+ *
+ * @see https://github.com/cashier-provider/sber-online
+ */
+
 namespace Tests;
 
 use CashierProvider\Core\Http\Response;
 use CashierProvider\Core\Services\Jobs;
+use CashierProvider\Sber\Online\Driver as QR;
 use DragonCode\Contracts\Cashier\Driver as DriverContract;
 use DragonCode\Contracts\Cashier\Http\Response as ResponseContract;
 use DragonCode\Support\Facades\Http\Url;
 use Illuminate\Database\Eloquent\Model;
 use Tests\Fixtures\Models\RequestPayment;
-use CashierProvider\BankName\Technology\Driver as Technology;
 
 class DriverTest extends TestCase
 {
@@ -27,7 +42,7 @@ class DriverTest extends TestCase
         $this->assertIsString($response->getExternalId());
         $this->assertMatchesRegularExpression('/^(\d+)$/', $response->getExternalId());
 
-        $this->assertNull($response->getStatus());
+        $this->assertSame(self::STATUS, $response->getStatus());
 
         $this->assertTrue(Url::is($response->getUrl()));
     }
@@ -46,10 +61,12 @@ class DriverTest extends TestCase
         $this->assertIsString($response->getExternalId());
         $this->assertMatchesRegularExpression('/^(\d+)$/', $response->getExternalId());
 
-        $this->assertSame('FORM_SHOWED', $response->getStatus());
+        $this->assertSame('PAID', $response->getStatus());
 
         $this->assertSame([
-            'status' => 'FORM_SHOWED',
+            'operation_id' => '10001HFYYR8956637',
+
+            'status' => 'PAID',
         ], $response->toArray());
     }
 
@@ -68,13 +85,13 @@ class DriverTest extends TestCase
         $this->assertIsString($response->getExternalId());
         $this->assertMatchesRegularExpression('/^(\d+)$/', $response->getExternalId());
 
-        $this->assertSame('CANCELED', $response->getStatus());
+        $this->assertSame('REVERSED', $response->getStatus());
     }
 
     protected function driver(Model $payment): DriverContract
     {
         $config = $this->config();
 
-        return Technology::make($config, $payment);
+        return QR::make($config, $payment);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the "cashier-provider/sber-online" project.
  *
@@ -18,6 +19,8 @@ namespace Tests\Fixtures\Models;
 
 use CashierProvider\Core\Concerns\Casheable;
 use DragonCode\LaravelSupport\Eloquent\UuidModel;
+use Illuminate\Support\Carbon;
+use Tests\TestCase;
 
 /**
  * @property \Illuminate\Support\Carbon $created_at
@@ -25,20 +28,34 @@ use DragonCode\LaravelSupport\Eloquent\UuidModel;
  * @property int $currency
  * @property int $status_id
  * @property int $type_id
- * @property string $id;
+ * @property string $uuid;
  */
-class RequestPayment extends UuidModel
+class StatusPayment extends UuidModel
 {
     use Casheable;
 
-    protected $table = 'payments';
+    protected function getUuidAttribute(): string
+    {
+        return TestCase::PAYMENT_ID;
+    }
 
-    protected $fillable = ['type_id', 'status_id', 'sum', 'currency'];
+    protected function getTypeIdAttribute(): int
+    {
+        return TestCase::MODEL_TYPE_ID;
+    }
 
-    protected $casts = [
-        'type_id'   => 'integer',
-        'status_id' => 'integer',
+    protected function getSumAttribute(): float
+    {
+        return TestCase::PAYMENT_SUM;
+    }
 
-        'sum' => 'float',
-    ];
+    protected function getCurrencyAttribute(): string
+    {
+        return TestCase::CURRENCY;
+    }
+
+    protected function getCreatedAtAttribute(): Carbon
+    {
+        return Carbon::parse(TestCase::PAYMENT_DATE);
+    }
 }
