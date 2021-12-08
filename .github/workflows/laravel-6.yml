@@ -36,10 +36,10 @@ jobs:
 
             -   name: Store environment variables
                 run: |
-                    echo "CASHIER_SBER_ONLINE_USERNAME=${{ CASHIER_SBER_ONLINE_USERNAME }}" >> .env
-                    echo "CASHIER_SBER_ONLINE_PASSWORD=${{ CASHIER_SBER_ONLINE_PASSWORD }}" >> .env
-                    echo "CASHIER_SBER_ONLINE_SUCCESS_URL=${{ CASHIER_SBER_ONLINE_SUCCESS_URL }}" >> .env
-                    echo "CASHIER_SBER_ONLINE_FAIL_URL=${{ CASHIER_SBER_ONLINE_FAIL_URL }}" >> .env
+                    echo "CASHIER_SBER_ONLINE_USERNAME=\"${{ CASHIER_SBER_ONLINE_USERNAME }}\"" >> .env
+                    echo "CASHIER_SBER_ONLINE_PASSWORD=\"${{ CASHIER_SBER_ONLINE_PASSWORD }}\"" >> .env
+                    echo "CASHIER_SBER_ONLINE_SUCCESS_URL=\"${{ CASHIER_SBER_ONLINE_SUCCESS_URL }}\"" >> .env
+                    echo "CASHIER_SBER_ONLINE_FAIL_URL=\"${{ CASHIER_SBER_ONLINE_FAIL_URL }}\"" >> .env
                     echo "CASHIER_SBER_ONLINE_ORDER_PREFIX=${{ CASHIER_SBER_ONLINE_ORDER_PREFIX }}" >> .env
 
             -   name: Install dependencies
