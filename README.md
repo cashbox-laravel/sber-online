@@ -1,6 +1,6 @@
-# Sber QR Cashier Driver
+# Sber Online Cashier Driver
 
-<img src="https://preview.dragon-code.pro/cashier-provider/sber-qr.svg?brand=laravel" alt="Sber QR Cashier Driver"/>
+![cashier provider sber online](https://preview.dragon-code.pro/cashier-provider/sber-online.svg?brand=laravel)
 
 [![Stable Version][badge_stable]][link_packagist]
 [![Unstable Version][badge_unstable]][link_packagist]
@@ -10,10 +10,10 @@
 
 ## Installation
 
-To get the latest version of `Sber QR Cashier Driver`, simply require the project using [Composer](https://getcomposer.org):
+To get the latest version of `Sber Online Cashier Driver`, simply require the project using [Composer](https://getcomposer.org):
 
 ```bash
-$ composer require cashier-provider/sber-qr
+$ composer require cashier-provider/sber-online
 ```
 
 Or manually update `require` block of `composer.json` and run `composer update`.
@@ -21,7 +21,7 @@ Or manually update `require` block of `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "cashier-provider/sber-qr": "^2.0"
+        "cashier-provider/sber-online": "^1.0"
     }
 }
 ```
@@ -34,7 +34,7 @@ Or manually update `require` block of `composer.json` and run `composer update`.
 >
 > Member ID and Terminal ID must be provided by the bank manager in response to the agreement concluded with the bank.
 >
-> You can get the values of the `client_id`, `client_secret`, `certificate file` and `certificate password` yourself through the developer's [personal account](https://developer.sberbank.ru/doc).
+> You can get the values of the `username` and `password` from your personal bank manager.
 
 
 ### Configuration
@@ -43,31 +43,29 @@ Add your driver information to the `config/cashier.php` file:
 
 ```php
 use App\Models\Payment;
-use App\Payments\Sber as SberQrDetails;
+use App\Payments\Sber as SberOnlineDetails;
 use CashierProvider\Core\Constants\Driver;
-use CashierProvider\Sber\Online\Driver as SberQrDriver;
+use CashierProvider\Sber\Online\Driver as SberOnlineDriver;
 
 return [
     'payment' => [
         'map' => [
-            Payment::TYPE_SBER => 'sber_qr'
+            Payment::TYPE_SBER => 'sber_online'
         ]
     ],
 
     'drivers' => [
-        'sber_qr' => [
-            Driver::DRIVER  => SberQrDriver::class,
-            Driver::DETAILS => SberQrDetails::class,
+        'sber_online' => [
+            Driver::DRIVER  => SberOnlineDriver::class,
+            Driver::DETAILS => SberOnlineDetails::class,
 
-            Driver::CLIENT_ID       => env('CASHIER_SBER_QR_CLIENT_ID'),
-            Driver::CLIENT_SECRET   => env('CASHIER_SBER_QR_CLIENT_SECRET'),
+            Driver::CLIENT_ID       => env('CASHIER_SBER_ONLINE_USERNAME'),
+            Driver::CLIENT_SECRET   => env('CASHIER_SBER_ONLINE_PASSWORD'),
 
-            'member_id'   => env('CASHIER_SBER_QR_MEMBER_ID'),
-            'terminal_id' => env('CASHIER_SBER_QR_TERMINAL_ID'),
+            'success_url' => env('CASHIER_SBER_ONLINE_SUCCESS_URL'),
+            'fail_url' => env('CASHIER_SBER_ONLINE_FAIL_URL'),
 
-            'certificate_path' => storage_path(env('CASHIER_SBER_QR_CERTIFICATE_PATH')),
-
-            'certificate_password' => env('CASHIER_SBER_QR_CERTIFICATE_PASSWORD'),
+            'order_prefix' => env('CASHIER_SBER_ONLINE_ORDER_PREFIX')
         ]
     ]
 ];
@@ -106,24 +104,19 @@ class Sber extends Model
         return $this->model->created_at;
     }
 
-    public function getMemberId(): string
+    public function getSuccessUrl(): string
     {
-        return config('cashier.drivers.sber_qr.member_id');
+        return config('cashier.drivers.sber_online.success_url');
     }
 
-    public function getTerminalId(): string
+    public function getFailUrl(): string
     {
-        return config('cashier.drivers.sber_qr.terminal_id');
+        return config('cashier.drivers.sber_online.fail_url');
     }
 
-    public function getCertificatePath(): ?string
+    public function getOrderPrefix(): string
     {
-        return config('cashier.drivers.sber_qr.certificate_path');
-    }
-
-    public function getCertificatePassword(): ?string
-    {
-        return config('cashier.drivers.sber_qr.certificate_password');
+        return config('cashier.drivers.sber_online.order_prefix');
     }
 }
 ```
@@ -174,26 +167,19 @@ class Sber extends Model
         return $this->bank()->client_secret;
     }
 
-    public function getMemberId(): string
+    public function getSuccessUrl(): string
     {
-        return $this->bank()->member_id;
+        return $this->bank()->success_url;
     }
 
-    public function getTerminalId(): string
+    public function getFailUrl(): string
     {
-        return $this->bank()->terminal_id;
+        return $this->bank()->fail_url;
     }
 
-    public function getCertificatePath(): ?string
+    public function getOrderPrefix(): string
     {
-        return Storage::disk('cashier')->path(
-            $this->bank()->certificate_path
-        );
-    }
-
-    public function getCertificatePassword(): ?string
-    {
-        return $this->bank()->certificate_password;
+        return $this->bank()->order_prefix;
     }
 
     protected function bank()
