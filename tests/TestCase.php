@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use CashierProvider\BankName\Technology\Driver;
 use CashierProvider\Core\Config\Driver as DriverConfig;
 use CashierProvider\Core\Constants\Driver as DriverConstant;
 use CashierProvider\Core\Facades\Config\Payment as PaymentConfig;
@@ -15,7 +16,6 @@ use Tests\Concerns\Database;
 use Tests\Concerns\TestServiceProvider;
 use Tests\Fixtures\Models\ReadyPayment;
 use Tests\Fixtures\Resources\Model;
-use CashierProvider\BankName\Technology\Driver;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -73,7 +73,7 @@ abstract class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function model(Details $details = null): ReadyPayment
+    protected function model(?Details $details = null): ReadyPayment
     {
         $model = PaymentConfig::getModel();
 
@@ -99,7 +99,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  \CashierProvider\BankName\Technology\Requests\BaseRequest|string  $request
+     * @param \CashierProvider\BankName\Technology\Requests\BaseRequest|string $request
      *
      * @return \DragonCode\Contracts\Cashier\Http\Request
      */
