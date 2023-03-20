@@ -1,6 +1,6 @@
 # Sber Online Cashier Driver
 
-![cashier provider sber online](https://preview.dragon-code.pro/cashier-provider/sber-online.svg?brand=laravel)
+![cashier provider sber online](https://preview.dragon-code.pro/cashier-provider/sber-online.svg?brand=laravel&mode=dark)
 
 [![Stable Version][badge_stable]][link_packagist]
 [![Unstable Version][badge_unstable]][link_packagist]
