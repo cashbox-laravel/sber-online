@@ -1,32 +1,17 @@
 <?php
 
-/*
- * This file is part of the "cashier-provider/sber-online" project.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @author Andrey Helldar <helldar@ai-rus.com>
- *
- * @copyright 2021 Andrey Helldar
- *
- * @license MIT
- *
- * @see https://github.com/cashier-provider/sber-online
- */
+namespace CashierProvider\BankName\Technology;
 
-namespace SberOnline\src;
-
+use CashierProvider\BankName\Technology\Exceptions\Manager;
+use CashierProvider\BankName\Technology\Helpers\Statuses;
+use CashierProvider\BankName\Technology\Requests\Cancel;
+use CashierProvider\BankName\Technology\Requests\GetState;
+use CashierProvider\BankName\Technology\Requests\Init;
+use CashierProvider\BankName\Technology\Resources\Details;
+use CashierProvider\BankName\Technology\Responses\Created;
+use CashierProvider\BankName\Technology\Responses\Refund;
+use CashierProvider\BankName\Technology\Responses\State;
 use CashierProvider\Core\Services\Driver as BaseDriver;
-use SberOnline\src\Exceptions\Manager;
-use SberOnline\src\Helpers\Statuses;
-use SberOnline\src\Requests\Cancel;
-use SberOnline\src\Requests\Create;
-use SberOnline\src\Requests\Status;
-use SberOnline\src\Resources\Details;
-use SberOnline\src\Responses\Cancel as CancelResponse;
-use SberOnline\src\Responses\Online;
-use SberOnline\src\Responses\Status as StatusResponse;
 use DragonCode\Contracts\Cashier\Http\Response;
 
 class Driver extends BaseDriver
@@ -39,22 +24,22 @@ class Driver extends BaseDriver
 
     public function start(): Response
     {
-        $request = Create::make($this->model);
+        $request = Init::make($this->model);
 
-        return $this->request($request, Online::class);
+        return $this->request($request, Created::class);
     }
 
     public function check(): Response
     {
-        $request = Status::make($this->model);
+        $request = GetState::make($this->model);
 
-        return $this->request($request, StatusResponse::class);
+        return $this->request($request, State::class);
     }
 
     public function refund(): Response
     {
         $request = Cancel::make($this->model);
 
-        return $this->request($request, CancelResponse::class);
+        return $this->request($request, Refund::class);
     }
 }

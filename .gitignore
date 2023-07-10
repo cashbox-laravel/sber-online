@@ -5,11 +5,6 @@ vendor/
 
 .env
 
-*.p12
-*.pem
-*.crt
-*.key
-
 *.bak
 *.cache
 *.clover
